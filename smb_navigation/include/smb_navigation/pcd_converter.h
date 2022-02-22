@@ -80,8 +80,10 @@ protected:
   float p_rot_yaw_;
   float p_rot_roll_;
   float p_rot_pitch_;
+  float std_multiplier_;
 
   bool initialized_;
+  bool ground_filtering_;
 }; // end class PcdConverter
 
 } // end namespace smb_navigation

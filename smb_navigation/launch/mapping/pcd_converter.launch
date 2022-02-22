@@ -6,11 +6,14 @@
   <arg name="resolution"   default="0.15" /> <!-- [m] -->
   <arg name="frame_id"     default="world"  /> <!-- This has to match the frame id of the input point cloud -->
   
-  <arg name="rot_roll"     default="3.0"  /> <!-- [deg] -->
+  <arg name="rot_roll"     default="0.0"  /> <!-- [deg] -->
   <arg name="rot_pitch"    default="0.0"  /> <!-- [deg] -->
   <arg name="rot_yaw"      default="0.0"  /> <!-- [deg] -->
 
-	<!-- Main node -->
+  <arg name="std_multiplier"   default="0.5"/> <!-- Remove outliers if more than this value times the std points distance in the pcl -->
+  <arg name="ground_filtering" default="true"/>
+	
+  <!-- Main node -->
   <node pkg="smb_navigation" type="pcd_converter_node" name="pcd_converter_node" output="screen">
     <param name="input_file"   value="$(arg input_file)"/>
     <param name="output_file"  value="$(arg output_file)"/>
@@ -21,5 +24,7 @@
     <param name="rot_roll"     value="$(arg rot_roll)"/>
     <param name="rot_pitch"    value="$(arg rot_pitch)"/>
     <param name="rot_yaw"      value="$(arg rot_yaw)"/>
+    <param name="std_multiplier" value="$(arg std_multiplier)"/>
+    <param name="ground_filtering" value="$(arg ground_filtering)"/>
   </node>
 </launch>

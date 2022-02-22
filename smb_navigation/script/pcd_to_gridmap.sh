@@ -7,9 +7,10 @@ NC='\033[0m' # No Color
 
 
 # Parameters - TODO
-resolution=0.2 # [m]
-z_min=-0.5
-z_max=1.0
+resolution=0.05 #0.15 # [m]
+resolution_octomap=0.01
+z_min=-0.1 #-0.1 #-1.0 #-0.5
+z_max=0.5 #0.1 #0.5
 
 # Check inputs
 print_help () {
@@ -45,7 +46,7 @@ if [ $run_rviz = true ] ; then
   sleep 2s
 fi
 
-roslaunch smb_navigation pcd_converter.launch resolution:=${resolution} input_file:=${input_file} output_file:=${output_bt_file}
+roslaunch smb_navigation pcd_converter.launch resolution:=${resolution} input_file:=${input_file} output_file:=${output_bt_file} ground_filtering:=false std_multiplier:=0.2
 sleep 1s
 echo -e "${YELLOW}Binary tree generated!${NC}"
 
@@ -58,7 +59,7 @@ rosrun map_server map_saver &
 sleep 3s
 
 echo -e "${YELLOW}Activating OctoMap Server${NC}"
-roslaunch smb_navigation octomap_server.launch resolution:=${resolution} path:=${output_bt_file} z_min:=${z_min} z_max:=${z_max}
+roslaunch smb_navigation octomap_server.launch resolution:=${resolution_octomap} path:=${output_bt_file} z_min:=${z_min} z_max:=${z_max}
 
 # Move the generated files to the output folder - the map is first generated and then moved (instead of being generated in the output folder directly) so that the relative path in the yaml file is correct by default
 mv map.yaml ${data_path}/map.yaml

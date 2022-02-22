@@ -149,44 +149,49 @@ void PcdConverter::generateMap()
   // Filter the ground from the point cloud
   // Notice: this is the most expensive step. For a ~500 000 points it takes
   //         around 7 minutes
-  ROS_WARN(
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(
+        new pcl::PointCloud<pcl::PointXYZ>);
+  if (ground_filtering_){
+    ROS_WARN(
       "[PCD Converter] Removing the ground -- this can take several minutes!"
       " It depends on map resolution");
-  start_time = std::chrono::high_resolution_clock::now();
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(
-      new pcl::PointCloud<pcl::PointXYZ>);
+    start_time = std::chrono::high_resolution_clock::now();
 
-  // Create the filtering object
-  pcl::ProgressiveMorphologicalFilter<pcl::PointXYZ> pmf;
-  pmf.setInputCloud(rotated_cloud);
-  pmf.setMaxWindowSize(20);
-  pmf.setSlope(1.0f);
-  pmf.setInitialDistance(0.5f);
-  pmf.setMaxDistance(2.0f);
+    // Create the filtering object
+    pcl::ProgressiveMorphologicalFilter<pcl::PointXYZ> pmf;
+    pmf.setInputCloud(rotated_cloud);
+    pmf.setMaxWindowSize(20);
+    pmf.setSlope(1.0f);
+    pmf.setInitialDistance(0.5f);
+    pmf.setMaxDistance(2.0f);
 
-  pcl::PointIndicesPtr ground(new pcl::PointIndices);
-  pmf.extract(ground->indices);
+    pcl::PointIndicesPtr ground(new pcl::PointIndices);
+    pmf.extract(ground->indices);
 
-  pcl::ExtractIndices<pcl::PointXYZ> extract;
-  extract.setInputCloud(rotated_cloud);
-  extract.setNegative(true);
-  extract.setIndices(ground);
-  extract.filter(*cloud_filtered);
+    pcl::ExtractIndices<pcl::PointXYZ> extract;
+    extract.setInputCloud(rotated_cloud);
+    extract.setNegative(true);
+    extract.setIndices(ground);
+    extract.filter(*cloud_filtered);
 
-  end_time = std::chrono::high_resolution_clock::now();
-  double time_filter_ground =
-      std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time)
-          .count();
-  ROS_INFO_STREAM("[PCD Converter] Time to remove ground from point cloud: "
-                  << time_filter_ground << " s");
-
+    end_time = std::chrono::high_resolution_clock::now();
+    double time_filter_ground =
+        std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time)
+            .count();
+    ROS_INFO_STREAM("[PCD Converter] Time to remove ground from point cloud: "
+                    << time_filter_ground << " s");
+  }
+  else{
+    cloud_filtered = rotated_cloud;
+  }
+  
   // Remove outliers
   start_time = std::chrono::high_resolution_clock::now();
 
   pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
   sor.setInputCloud(cloud_filtered);
   sor.setMeanK(50);
-  sor.setStddevMulThresh(0.5);
+  sor.setStddevMulThresh(std_multiplier_);
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr pruned_cloud(
       new pcl::PointCloud<pcl::PointXYZ>);
@@ -286,6 +291,18 @@ bool PcdConverter::readParameters()
     ROS_WARN("[PCD Converter] Rotation pitch not specified - using 0 deg");
     p_rot_pitch_ = 0;
   }
+  if (!nh_private_.getParam("std_multiplier", std_multiplier_))
+  {
+    ROS_WARN("[PCD Converter] Standard deviation multiplier not specified - using 0.5");
+    std_multiplier_ = 0.5;
+  }
+  if (!nh_private_.getParam("ground_filtering", ground_filtering_))
+  {
+    ROS_WARN("[PCD Converter] ground filtering not specified - true");
+    ground_filtering_ = true;
+  }
+  
+  
   return true;
 }
 
