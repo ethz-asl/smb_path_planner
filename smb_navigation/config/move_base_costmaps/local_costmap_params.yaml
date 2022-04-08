@@ -37,4 +37,4 @@ local_costmap:
   inflation_layer:
     enabled: true
     observation_sources: laser_scan_sensor
-    inflation_radius: 0.15
+    inflation_radius: 0.03
