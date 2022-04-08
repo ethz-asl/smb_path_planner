@@ -35,6 +35,6 @@ local_costmap:
       inf_is_valid: true   
 
   inflation_layer:
-    enabled: true
+    enabled: false # Inflation is done by the TebLocalPlanner
     observation_sources: laser_scan_sensor
-    inflation_radius: 0.03
+    inflation_radius: 0.45
