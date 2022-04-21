@@ -12,6 +12,7 @@ set(PACKAGE_DEPENDENCIES
     grid_map_ros
     pcl_ros
     octomap_ros
+    map_server
 )
 
 find_package(catkin REQUIRED COMPONENTS 
