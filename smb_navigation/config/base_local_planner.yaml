@@ -21,7 +21,7 @@ TebLocalPlannerROS:
   acc_lim_y: 0.0
   acc_lim_theta: 0.025
   wheelbase: 0.44
-  min_turning_radius: 1.0
+  min_turning_radius: 0.5
   footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
     type: "point" # DO NOT CHANGE THIS (at least not to polygon), or it will give weird planning behavior
     radius: 0.75 # for type "circular"
