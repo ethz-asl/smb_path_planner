@@ -27,7 +27,7 @@ global_costmap:
     observation_sources: laser_scan_sensor
     
   obstacle_layer:
-    enabled: false
+    enabled: true
     observation_sources: laser_scan_sensor 
     laser_scan_sensor:
       data_type: 'LaserScan'

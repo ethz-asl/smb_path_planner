@@ -3,7 +3,9 @@
 obstacle_range: 20       # obstacles put in map up to obstacle_range
 raytrace_range: 25       # raytrace free space up to raytrace_range
 
-footprint: [[0.4, 0.4], [0.4, -0.4], [-0.4, -0.4], [-0.4, 0.4]]  # footprint fo the robot, centered in robot centre
+footprint: [[0.01, 0.01], [0.01, -0.01], [-0.01, -0.01], [-0.01, 0.01]]  # footprint fo the robot, centered in robot centre
+footprint_padding: 0.3  # In my tests putting footprint low and this high works much better
+robot_radius: 0.01
 #robot_radius: ir_of_robot
 
 cost_scaling_factor: 1.0

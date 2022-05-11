@@ -35,5 +35,6 @@ TebLocalPlannerROS:
 
   # Obstacles
   min_obstacle_dist: 0.45
+  penalty_epsilon: 0.01
 
   #weight_kinematics_turning_radius: 0.0
