@@ -37,4 +37,6 @@ TebLocalPlannerROS:
   min_obstacle_dist: 0.45
   penalty_epsilon: 0.01
 
+  is_footprint_dynamic: true
+
   #weight_kinematics_turning_radius: 0.0
